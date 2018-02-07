@@ -14,6 +14,10 @@ type IListenerManager interface {
 	HasListener(ctx context.Context, live api.Live) bool
 }
 
+func NewIListenerManager() IListenerManager {
+	return new(ListenerManager)
+}
+
 type ListenerManager struct {
 	savers map[api.Live]*Listener
 	lock   sync.RWMutex

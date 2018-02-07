@@ -18,6 +18,8 @@ var commonHeader = map[string]string{
 }
 
 func parseResponse(resp *request.Response) ([]byte, error) {
+	defer resp.Body.Close()
+
 	var reader io.Reader
 
 	switch resp.Header.Get("Content-Encoding") {
@@ -39,6 +41,7 @@ func parseResponse(resp *request.Response) ([]byte, error) {
 }
 
 func Get(url string, query map[string]string) ([]byte, error) {
+
 	c := new(http.Client)
 	req := request.NewRequest(c)
 	req.Headers = commonHeader
