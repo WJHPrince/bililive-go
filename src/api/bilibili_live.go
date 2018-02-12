@@ -1,10 +1,10 @@
 package api
 
 import (
+	"github.com/hr3lxphr6j/bililive-go/src/lib/http"
+	"github.com/tidwall/gjson"
 	"net/url"
 	"strings"
-	"bililive/src/lib/http"
-	"github.com/tidwall/gjson"
 )
 
 const (

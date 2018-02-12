@@ -1,7 +1,7 @@
 package listeners
 
 import (
-	"bililive/src/lib/events"
+	"github.com/hr3lxphr6j/bililive-go/src/lib/events"
 )
 
 const (

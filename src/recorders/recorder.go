@@ -1,9 +1,9 @@
 package recorders
 
 import (
+	"github.com/hr3lxphr6j/bililive-go/src/api"
 	"os/exec"
 	"time"
-	"bililive/src/api"
 )
 
 type Recorder struct {

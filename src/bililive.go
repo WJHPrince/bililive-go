@@ -1,9 +1,9 @@
 package core
 
 import (
-	"bililive/src/lib/events"
-	"bililive/src/listeners"
-	"bililive/src/configs"
+	"github.com/hr3lxphr6j/bililive-go/src/configs"
+	"github.com/hr3lxphr6j/bililive-go/src/lib/events"
+	"github.com/hr3lxphr6j/bililive-go/src/listeners"
 )
 
 type Instance struct {

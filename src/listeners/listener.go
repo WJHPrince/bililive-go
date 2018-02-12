@@ -1,9 +1,9 @@
 package listeners
 
 import (
-	"bililive/src/api"
+	"github.com/hr3lxphr6j/bililive-go/src/api"
+	"github.com/hr3lxphr6j/bililive-go/src/lib/events"
 	"time"
-	"bililive/src/lib/events"
 )
 
 type Listener struct {

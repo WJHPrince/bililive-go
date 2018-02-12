@@ -2,9 +2,9 @@ package recorders
 
 import (
 	"context"
-	"bililive/src/api"
-	"time"
+	"github.com/hr3lxphr6j/bililive-go/src/api"
 	"sync"
+	"time"
 )
 
 type IRecorderManager interface {

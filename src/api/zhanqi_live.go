@@ -1,12 +1,12 @@
 package api
 
 import (
-	"net/url"
-	"bililive/src/lib/http"
-	"fmt"
-	"strings"
-	"github.com/tidwall/gjson"
 	"encoding/base64"
+	"fmt"
+	"github.com/hr3lxphr6j/bililive-go/src/lib/http"
+	"github.com/tidwall/gjson"
+	"net/url"
+	"strings"
 )
 
 const (

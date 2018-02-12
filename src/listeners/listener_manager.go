@@ -1,10 +1,10 @@
 package listeners
 
 import (
-	"bililive/src/api"
-	"sync"
 	"context"
-	"bililive/src"
+	"github.com/hr3lxphr6j/bililive-go/src"
+	"github.com/hr3lxphr6j/bililive-go/src/api"
+	"sync"
 	"time"
 )
 
