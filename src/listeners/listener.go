@@ -7,19 +7,23 @@ import (
 )
 
 type Listener struct {
-	Live   api.Live
+	Live api.Live
+
 	ticker *time.Ticker
 	ed     events.IEventDispatcher
 	stop   chan struct{}
+	isStop bool
 	status bool
 }
 
 func (l *Listener) Start() error {
 	go l.run()
+	l.isStop = false
 	return nil
 }
 
 func (l *Listener) Close() {
+	l.isStop = true
 	close(l.stop)
 }
 
@@ -28,7 +32,7 @@ func (l *Listener) run() {
 		l.ticker.Stop()
 	}()
 Loop:
-	for {
+	for !l.isStop {
 		select {
 		case <-l.stop:
 			break Loop

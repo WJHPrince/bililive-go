@@ -1,6 +1,7 @@
 package events
 
 import (
+	"context"
 	"sync"
 )
 
@@ -14,12 +15,15 @@ type IEventDispatcher interface {
 	DispatchEvent(event *Event) error
 }
 
-func NewIEventDispatcher() IEventDispatcher {
-	return new(EventDispatcher)
+func NewIEventDispatcher(ctx context.Context) IEventDispatcher {
+	ed := new(EventDispatcher)
+	ed.ctx = ctx
+	return ed
 }
 
 // 事件分发器
 type EventDispatcher struct {
+	ctx   context.Context
 	saver map[EventType]*eventListenerSet
 	lock  sync.RWMutex
 }
