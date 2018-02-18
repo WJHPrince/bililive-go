@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	biliBiliRoomApiUrl = "https://api.api.bilibili.com/room/v1/Room/get_info"
-	biliBiliUserApiUrl = "https://api.api.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room"
-	biliBiliLiveApiUrl = "https://api.api.bilibili.com/api/playurl"
+	biliBiliRoomApiUrl = "https://api.live.bilibili.com/room/v1/Room/get_info"
+	biliBiliUserApiUrl = "https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room"
+	biliBiliLiveApiUrl = "https://api.live.bilibili.com/room/v1/Room/playUrl"
 )
 
 type BiliBiliLive struct {
@@ -20,6 +20,7 @@ type BiliBiliLive struct {
 func (b *BiliBiliLive) GetRoom() (*Info, error) {
 	body, err := http.Get(biliBiliRoomApiUrl, map[string]string{
 		"room_id": strings.Split(b.Url.Path, "/")[1],
+		"from":    "room",
 	})
 	if err != nil {
 		return nil, err
@@ -48,7 +49,6 @@ func (b *BiliBiliLive) GetRoom() (*Info, error) {
 func (b *BiliBiliLive) GetUrls() ([]*url.URL, error) {
 	body, err := http.Get(biliBiliLiveApiUrl, map[string]string{
 		"cid":      strings.Split(b.Url.Path, "/")[1],
-		"otype":    "json",
 		"quality":  "0",
 		"platform": "web",
 	})
@@ -56,7 +56,7 @@ func (b *BiliBiliLive) GetUrls() ([]*url.URL, error) {
 		return nil, err
 	}
 
-	urls := gjson.GetBytes(body, "durl.#.url").Array()
+	urls := gjson.GetBytes(body, "data.durl.#.url").Array()
 
 	us := make([]*url.URL, 0, 4)
 	for _, u := range urls {
