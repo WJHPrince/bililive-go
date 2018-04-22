@@ -2,57 +2,74 @@ package recorders
 
 import (
 	"context"
-	"fmt"
-	"github.com/hr3lxphr6j/bililive-go/src"
 	"github.com/hr3lxphr6j/bililive-go/src/api"
-	"path/filepath"
+	"github.com/hr3lxphr6j/bililive-go/src/instance"
+	"github.com/hr3lxphr6j/bililive-go/src/lib/events"
+	"github.com/hr3lxphr6j/bililive-go/src/listeners"
 	"sync"
 	"time"
 )
 
-type IRecorderManager interface {
-	AddRecorder(live api.Live) error
-	GetRecorder(live api.Live) (*Recorder, error)
-	RemoveRecorder(live api.Live) (time.Duration, error)
-}
-
 func NewIRecorderManager(ctx context.Context) IRecorderManager {
-	rm := new(RecorderManager)
-	rm.ctx = ctx
+	rm := &RecorderManager{
+		saver: make(map[api.Live]*Recorder),
+		lock:  new(sync.RWMutex),
+	}
+	instance.GetInstance(ctx).RecorderManager = rm
 	return rm
 }
 
-type RecorderManager struct {
-	ctx   context.Context
-	saver map[api.Live]*Recorder
-	lock  sync.RWMutex
+type IRecorderManager interface {
+	AddRecorder(ctx context.Context, live *api.Info) error
+	GetRecorder(ctx context.Context, live api.Live) (*Recorder, error)
+	RemoveRecorder(ctx context.Context, live api.Live) (time.Duration, error)
 }
 
-func (r *RecorderManager) AddRecorder(live api.Live) error {
+type RecorderManager struct {
+	saver map[api.Live]*Recorder
+	lock  *sync.RWMutex
+}
+
+func (r *RecorderManager) Start(ctx context.Context) error {
+	inst := instance.GetInstance(ctx)
+	inst.WaitGroup.Add(1)
+
+	ed := inst.EventDispatcher.(events.IEventDispatcher)
+
+	// 开播事件
+	ed.AddEventListener(listeners.LiveStart, events.NewEventListener(func(event *events.Event) {
+		r.AddRecorder(ctx, event.Object.(*api.Info))
+	}))
+
+	// 下播事件
+	ed.AddEventListener(listeners.LiveEnd, events.NewEventListener(func(event *events.Event) {
+		r.RemoveRecorder(ctx, event.Object.(*api.Info).Live)
+	}))
+
+	return nil
+}
+
+func (r *RecorderManager) Close(ctx context.Context) {
+
+}
+
+func (r *RecorderManager) AddRecorder(ctx context.Context, info *api.Info) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	if _, ok := r.saver[live]; ok {
+	if _, ok := r.saver[info.Live]; ok {
 		return recorderExistError
 	}
-	info, err := live.GetRoom()
+	recorder, err := NewRecorder(ctx, info)
 	if err != nil {
 		return err
 	}
-	t := time.Now()
-	recorder := &Recorder{
-		Live: live,
-		OutPutFile: filepath.Join(
-			core.GetInstance(r.ctx).Config.OutPutPath,
-			fmt.Sprintf("[%d-%d-%d %d-%d-%d][%s]%s.flv",
-				t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), info.HostName, info.RoomName)),
-		ed: core.GetInstance(r.ctx).EventDispatcher,
-	}
-	r.saver[live] = recorder
+	r.saver[info.Live] = recorder
+	recorder.Start()
 	return nil
 
 }
 
-func (r *RecorderManager) GetRecorder(live api.Live) (*Recorder, error) {
+func (r *RecorderManager) GetRecorder(ctx context.Context, live api.Live) (*Recorder, error) {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
 	if r, ok := r.saver[live]; !ok {
@@ -62,11 +79,11 @@ func (r *RecorderManager) GetRecorder(live api.Live) (*Recorder, error) {
 	}
 }
 
-func (r *RecorderManager) RemoveRecorder(live api.Live) (time.Duration, error) {
+func (r *RecorderManager) RemoveRecorder(ctx context.Context, live api.Live) (time.Duration, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 	if recorder, ok := r.saver[live]; ok {
-		return 0, recorderExistError
+		return 0, recorderNotExistError
 	} else {
 		recorder.Close()
 		delete(r.saver, live)

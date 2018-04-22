@@ -12,7 +12,7 @@ import (
 
 const (
 	pandaApiUrl  = "http://www.panda.tv/api_room_v2"
-	pandaLiveUrl = "http://pl%s.api.panda.tv/live_panda/%s.flv?sign=%s&ts=%s&rid=%s"
+	pandaLiveUrl = "http://pl%s.live.panda.tv/live_panda/%s.flv?sign=%s&ts=%s&rid=%s"
 )
 
 type PandaLive struct {
@@ -43,6 +43,7 @@ func (p *PandaLive) GetRoom() (*Info, error) {
 	}
 
 	info := &Info{
+		Live:     p,
 		Url:      p.Url,
 		HostName: gjson.GetBytes(data, "data.hostinfo.name").String(),
 		RoomName: gjson.GetBytes(data, "data.roominfo.name").String(),

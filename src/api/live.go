@@ -5,6 +5,7 @@ import (
 )
 
 type Info struct {
+	Live               Live
 	Url                *url.URL
 	HostName, RoomName string
 	Status             bool

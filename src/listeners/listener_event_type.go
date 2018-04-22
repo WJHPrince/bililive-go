@@ -5,6 +5,7 @@ import (
 )
 
 const (
-	LiveStart events.EventType = "LiveStart"
-	LiveEnd   events.EventType = "LiveEnd"
+	ListenStart events.EventType = "ListenStart"
+	LiveStart   events.EventType = "LiveStart"
+	LiveEnd     events.EventType = "LiveEnd"
 )
