@@ -1,4 +1,4 @@
-#Bililive-go
+# Bililive-go
 
 直播录制工具，目前支持 哔哩哔哩，熊猫TV，战旗TV
 
