@@ -22,25 +22,19 @@ func info2Fields(info *api.Info) logrus.Fields {
 
 func registerEventLog(ed events.IEventDispatcher, logger *interfaces.Logger) {
 
-	ed.AddEventListener(listeners.ListenStart, events.NewEventListener(func(event *events.Event) {
-		logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
-	}))
+	targetEvents := []events.EventType{
+		listeners.ListenStart,
+		listeners.LiveStart,
+		listeners.LiveEnd,
+		recorders.RecordeStart,
+		recorders.RecordeStop,
+	}
 
-	ed.AddEventListener(listeners.LiveStart, events.NewEventListener(func(event *events.Event) {
-		logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
-	}))
-
-	ed.AddEventListener(listeners.LiveEnd, events.NewEventListener(func(event *events.Event) {
-		logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
-	}))
-
-	ed.AddEventListener(recorders.RecordeStart, events.NewEventListener(func(event *events.Event) {
-		logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
-	}))
-
-	ed.AddEventListener(recorders.RecordeStop, events.NewEventListener(func(event *events.Event) {
-		logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
-	}))
+	for _, e := range targetEvents {
+		ed.AddEventListener(e, events.NewEventListener(func(event *events.Event) {
+			logger.WithFields(info2Fields(event.Object.(*api.Info))).Info(event.Type)
+		}))
+	}
 
 }
 

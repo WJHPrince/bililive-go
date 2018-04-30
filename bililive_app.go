@@ -16,7 +16,7 @@ import (
 
 const (
 	AppName     = "BiliLive"
-	AppVersion  = "0.01"
+	AppVersion  = "0.02"
 	CommandName = "bililive"
 )
 
@@ -43,11 +43,13 @@ func version() {
 }
 
 func main() {
+	// 判断FFmpeg
 	if !utils.IsFFmpegExist() {
-		fmt.Fprintf(os.Stderr, "FFmpeg not found, Please Check.\n")
+		fmt.Fprintf(os.Stderr, "FFmpeg binary not found, Please Check.\n")
 		os.Exit(3)
 	}
 
+	// 解析参数
 	parse()
 	if h {
 		help()
@@ -57,9 +59,11 @@ func main() {
 		version()
 		return
 	}
+	// 初始化实例
 	inst := new(instance.Instance)
 	ctx := context.WithValue(context.Background(), instance.InstanceKey, inst)
 
+	// 解析配置文件
 	config, err := configs.NewConfig(c)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error()+"\n")
@@ -67,8 +71,10 @@ func main() {
 	}
 	inst.Config = config
 
+	// 初始化组件
 	events.NewIEventDispatcher(ctx)
-	log.NewLogger(ctx)
+	logger := log.NewLogger(ctx)
+	logger.Infof("%s Version: %s Link Start", AppName, AppVersion)
 	listeners.NewIListenerManager(ctx)
 	recorders.NewIRecorderManager(ctx)
 

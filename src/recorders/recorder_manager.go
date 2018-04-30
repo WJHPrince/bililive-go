@@ -82,7 +82,7 @@ func (r *RecorderManager) GetRecorder(ctx context.Context, live api.Live) (*Reco
 func (r *RecorderManager) RemoveRecorder(ctx context.Context, live api.Live) (time.Duration, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
-	if recorder, ok := r.saver[live]; ok {
+	if recorder, ok := r.saver[live]; !ok {
 		return 0, recorderNotExistError
 	} else {
 		recorder.Close()

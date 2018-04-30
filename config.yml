@@ -9,4 +9,4 @@ rpc:
 log_level: debug
 interval: 15
 out_put_path: /Users/chigusa
-live_rooms: ["https://www.panda.tv/116304","https://www.panda.tv/764598"]
+live_rooms: ["https://live.bilibili.com/146910"]

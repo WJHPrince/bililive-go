@@ -2,7 +2,6 @@ package listeners
 
 import (
 	"context"
-	"fmt"
 	"github.com/hr3lxphr6j/bililive-go/src/api"
 	"github.com/hr3lxphr6j/bililive-go/src/instance"
 	"net/url"
@@ -30,9 +29,7 @@ type ListenerManager struct {
 	lock   *sync.RWMutex
 }
 
-/**
-验证直播间有效性
-*/
+// 验证直播间有效性
 func (l *ListenerManager) verifyLive(live api.Live) bool {
 	for i := 0; i < 3; i++ {
 		_, err := live.GetRoom()
@@ -90,7 +87,7 @@ func (l *ListenerManager) Start(ctx context.Context) error {
 	for _, room := range instance.GetInstance(ctx).Config.LiveRooms {
 		u, err := url.Parse(room)
 		if err != nil {
-			fmt.Printf("%s is not add.\n", room)
+			instance.GetInstance(ctx).Logger.Error(err)
 		}
 		l.AddListener(ctx, api.NewLive(u))
 	}

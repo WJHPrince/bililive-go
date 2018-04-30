@@ -73,9 +73,8 @@ func (r *Recorder) Start() error {
 func (r *Recorder) Close() {
 	close(r.stop)
 	stdIn, err := r.cmd.StdinPipe()
-	if err != nil {
-		panic(err)
+	if err == nil {
+		stdIn.Write([]byte("q"))
 	}
-	stdIn.Write([]byte("q"))
 	r.ed.DispatchEvent(events.NewEvent(RecordeStop, r.Info))
 }
