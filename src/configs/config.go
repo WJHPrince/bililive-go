@@ -28,9 +28,9 @@ type Config struct {
 	LiveRooms  []string `yaml:"live_rooms"`
 }
 
-func verifyConfig(config *Config) error {
-	if config.Interval == 0 {
-		config.Interval = 30
+func VerifyConfig(config *Config) error {
+	if config.Interval <= 0 {
+		return errors.New(fmt.Sprintf(`the interval can not <= 0`))
 	}
 	if _, err := os.Stat(config.OutPutPath); err != nil {
 		return errors.New(fmt.Sprintf(`the out put path: "%s" is not exist`, config.OutPutPath))
@@ -48,7 +48,7 @@ func verifyConfig(config *Config) error {
 	return nil
 }
 
-func NewConfig(configFilePath string) (*Config, error) {
+func NewConfigWithFile(configFilePath string) (*Config, error) {
 	b, err := ioutil.ReadFile(configFilePath)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("can`t open file: %s", configFilePath))
@@ -58,8 +58,14 @@ func NewConfig(configFilePath string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = verifyConfig(config); err != nil {
-		return nil, err
-	}
 	return config, nil
+}
+
+func NewConfig() *Config {
+	config := new(Config)
+	config.RPC.Enable = false
+	config.LogLevel = "info"
+	config.Interval = 30
+	config.OutPutPath = "./"
+	return config
 }

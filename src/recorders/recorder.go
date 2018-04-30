@@ -30,7 +30,7 @@ func NewRecorder(ctx context.Context, info *api.Info) (*Recorder, error) {
 		Live: info.Live,
 		OutPutFile: filepath.Join(
 			instance.GetInstance(ctx).Config.OutPutPath,
-			fmt.Sprintf("[%d-%d-%d %d-%d-%d][%s]%s.flv",
+			fmt.Sprintf("[%02d-%02d-%02d %02d-%02d-%02d][%s]%s.flv",
 				t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), info.HostName, info.RoomName)),
 		ed: inst.EventDispatcher.(events.IEventDispatcher),
 	}, nil

@@ -44,7 +44,7 @@ func (l *ListenerManager) verifyLive(live api.Live) bool {
 }
 
 func (l *ListenerManager) AddListener(ctx context.Context, live api.Live) error {
-	if live != nil && !l.verifyLive(live) {
+	if live == nil || !l.verifyLive(live) {
 		return roomNotExistError
 	}
 
@@ -89,7 +89,10 @@ func (l *ListenerManager) Start(ctx context.Context) error {
 		if err != nil {
 			instance.GetInstance(ctx).Logger.Error(err)
 		}
-		l.AddListener(ctx, api.NewLive(u))
+		err = l.AddListener(ctx, api.NewLive(u))
+		if err != nil {
+			instance.GetInstance(ctx).Logger.WithFields(map[string]interface{}{"Url": room}).Error(err)
+		}
 	}
 	return nil
 }
