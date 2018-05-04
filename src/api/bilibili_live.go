@@ -8,27 +8,43 @@ import (
 )
 
 const (
-	biliBiliRoomApiUrl = "https://api.live.bilibili.com/room/v1/Room/get_info"
-	biliBiliUserApiUrl = "https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room"
-	biliBiliLiveApiUrl = "https://api.live.bilibili.com/room/v1/Room/playUrl"
+	biliBiliRoomInitUrl = "https://api.live.bilibili.com/room/v1/Room/room_init"
+	biliBiliRoomApiUrl  = "https://api.live.bilibili.com/room/v1/Room/get_info"
+	biliBiliUserApiUrl  = "https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room"
+	biliBiliLiveApiUrl  = "https://api.live.bilibili.com/room/v1/Room/playUrl"
 )
 
 type BiliBiliLive struct {
-	Url *url.URL
+	Url             *url.URL
+	shortId, fullId string
 }
 
 func (b *BiliBiliLive) GetRoom() (*Info, error) {
+	// Parse the short id from URL to full id
+	if b.shortId == "" || b.fullId == "" {
+		b.shortId = strings.Split(b.Url.Path, "/")[1]
+		if body, err := http.Get(biliBiliRoomInitUrl, map[string]string{"id": b.shortId}); err != nil {
+			return nil, err
+		} else {
+			if gjson.GetBytes(body, "code").Int() != 0 {
+				return nil, &RoomNotExistsError{b.Url}
+			} else {
+				b.fullId = gjson.GetBytes(body, "data.room_id").String()
+			}
+		}
+	}
+
 	body, err := http.Get(biliBiliRoomApiUrl, map[string]string{
-		"room_id": strings.Split(b.Url.Path, "/")[1],
+		"room_id": b.fullId,
 		"from":    "room",
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	if gjson.GetBytes(body, "code").Int() != 0 {
 		return nil, &RoomNotExistsError{b.Url}
 	}
+
 	info := &Info{
 		Live:     b,
 		Url:      b.Url,
@@ -49,7 +65,7 @@ func (b *BiliBiliLive) GetRoom() (*Info, error) {
 
 func (b *BiliBiliLive) GetUrls() ([]*url.URL, error) {
 	body, err := http.Get(biliBiliLiveApiUrl, map[string]string{
-		"cid":      strings.Split(b.Url.Path, "/")[1],
+		"cid":      b.fullId,
 		"quality":  "0",
 		"platform": "web",
 	})
