@@ -71,7 +71,7 @@
 * `PUT /lives` Add live
     - Request:  
         ```text
-        method: GET
+        method: PUT
         path: /lives
         token: 114514
         body: 
@@ -224,7 +224,7 @@
 * `GET /files/` A basic file server for out put path
     - Request:  
         ```text
-        method: PUT
+        method: GET
         path: /files
         token: 114514
         ```
