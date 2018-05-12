@@ -1,11 +1,11 @@
 # Bililive-go API
 
 
-* `GET /live` Get all live info 
+* `GET /lives` Get all live info 
     - Request:  
         ```text
         method: GET
-        path: /live
+        path: /lives
         token: 114514
         ```
     - Response:   
@@ -42,11 +42,11 @@
         }
         ```
         
-* `GET /live/{id}` Get live info by id
+* `GET /lives/{id}` Get live info by id
     - Request:  
         ```text
         method: GET
-        path: /live/8cfc58ff74b31970899c0fe69345c222
+        path: /lives/8cfc58ff74b31970899c0fe69345c222
         token: 114514
         ```
     - Response:
@@ -68,11 +68,50 @@
         }
         ```
         
-* `DELETE /live/{id}` Delete live by id
+* `PUT /lives` Add live
+    - Request:  
+        ```text
+        method: GET
+        path: /lives
+        token: 114514
+        body: 
+              {
+                  "lives": [
+                      {
+                          "url": "https://www.panda.tv/10300",
+                          "listen": true
+                      }
+                  ]
+              }
+        ```
+    - Response:
+        ```json
+        {
+            "err_no": 0,
+            "err_msg": "",
+            "data": {
+                "lives": [
+                    {
+                        "id": "8cfc58ff74b31970899c0fe69345c222",
+                        "live_url": "https://www.panda.tv/10300",
+                        "info": {
+                            "host_name": "司机王老菊",
+                            "room_name": "【王老菊】",
+                            "status": false
+                        },
+                        "is_listening": true,
+                        "is_recoding": false
+                    }
+                ]
+            }
+        }
+        ```        
+        
+* `DELETE /lives/{id}` Delete live by id
     - Request:  
         ```text
         method: DELETE
-        path: /live/8cfc58ff74b31970899c0fe69345c222
+        path: /lives/8cfc58ff74b31970899c0fe69345c222
         token: 114514
         ```
     - Response:
@@ -88,7 +127,7 @@
     - Request:  
         ```text
         method: GET
-        path: /live/8cfc58ff74b31970899c0fe69345c222/start
+        path: /lives/8cfc58ff74b31970899c0fe69345c222/start
         token: 114514
         ```
     - Response:
@@ -114,7 +153,7 @@
     - Request:  
         ```text
         method: GET
-        path: /live/8cfc58ff74b31970899c0fe69345c222/stop
+        path: /lives/8cfc58ff74b31970899c0fe69345c222/stop
         token: 114514
         ```
     - Response:
