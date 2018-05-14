@@ -68,10 +68,10 @@
         }
         ```
         
-* `PUT /lives` Add live
+* `POST /lives` Add live
     - Request:  
         ```text
-        method: PUT
+        method: POST
         path: /lives
         token: 114514
         body: 
