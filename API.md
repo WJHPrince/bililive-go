@@ -5,8 +5,7 @@
     - Request:  
         ```text
         method: GET
-        path: /lives
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives
         ```
     - Response:   
         ```json
@@ -46,8 +45,7 @@
     - Request:  
         ```text
         method: GET
-        path: /lives/8cfc58ff74b31970899c0fe69345c222
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives/8cfc58ff74b31970899c0fe69345c222
         ```
     - Response:
         ```json
@@ -72,8 +70,7 @@
     - Request:  
         ```text
         method: POST
-        path: /lives
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives
         body: 
               {
                   "lives": [
@@ -111,8 +108,7 @@
     - Request:  
         ```text
         method: DELETE
-        path: /lives/8cfc58ff74b31970899c0fe69345c222
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives/8cfc58ff74b31970899c0fe69345c222
         ```
     - Response:
         ```json
@@ -127,8 +123,7 @@
     - Request:  
         ```text
         method: GET
-        path: /lives/8cfc58ff74b31970899c0fe69345c222/start
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives/8cfc58ff74b31970899c0fe69345c222/start
         ```
     - Response:
         ```json
@@ -153,8 +148,7 @@
     - Request:  
         ```text
         method: GET
-        path: /lives/8cfc58ff74b31970899c0fe69345c222/stop
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/lives/8cfc58ff74b31970899c0fe69345c222/stop
         ```
     - Response:
         ```json
@@ -179,8 +173,7 @@
     - Request:  
         ```text
         method: GET
-        path: /config
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/config
         ```
     - Response:
         ```json
@@ -209,8 +202,7 @@
     - Request:  
         ```text
         method: PUT
-        path: /config
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/config
         ```
     - Response:
         ```json
@@ -225,8 +217,7 @@
     - Request:  
         ```text
         method: GET
-        path: /files
-        token: 114514
+        path: http://token:114514@127.0.0.1:8080/files
         ```
     - Response:
         ```html
